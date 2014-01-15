@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>foo_catnap test</title>
+    <!--<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>-->
+    <!--<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>-->
+    <!--<script src="test.js"></script>-->
+</head>
+
+<body>
+
+<ol>
+    <li>Sending request... <span id="send-status"></span></li>
+    <li>Waiting for response... <span id="receive-status"><span><pre id="receive-message"></pre></li>
+    <li>Parsing response... <span id="parse-status"><span><pre id="parse-message"></pre></li>
+</ol>
+
+<p>Playlists</p>
+<ol id="playlists">
+</ol>
+
+<script type="text/javascript">
+(function() {
+    var url = 'http://localhost:20402/playlists';
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.onreadystatechange = function() {
+        if (httpRequest.readyState == 4 && httpRequest.status == 200)
+        {
+            document.getElementById('receive-status').innerHTML = 'done';
+            document.getElementById('receive-message').textContent = httpRequest.responseText;
+            
+            var data = JSON.parse(httpRequest.responseText);
+            document.getElementById('parse-status').innerHTML = 'done';
+            document.getElementById('parse-message').textContent = JSON.stringify(data);
+            
+            var playlists = data.playlists;
+            var parent = document.getElementById('playlists');
+            for (n = 0; n < playlists.length; ++n) {
+                var child = document.createElement('li');
+                var playlist = playlists[n];
+                child.textContent = playlist.name + (playlist.active ? ' [active]' : '') + (playlist.playing ? ' [playing]' : '');
+                parent.appendChild(child);
+            }
+        }
+    };
+    httpRequest.open('GET', url, true);
+    httpRequest.setRequestHeader('ContentType', 'application/json; charset=utf-8');
+    httpRequest.setRequestHeader('Accept', 'application/json; charset=utf-8');
+    httpRequest.send();
+    document.getElementById('send-status').innerHTML = 'done';
+    //$('#responseParagraph').append("<p>Requesting data...</p>");
+    //$.getJSON('http://localhost:20402/',
+    //    function(data) {
+    //        $('#responseParagraph').append("<p>"+data.responseMessage+"</p>");
+    //    });
+})();
+</script>
+</body>
+</html>

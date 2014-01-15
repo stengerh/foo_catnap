@@ -1,0 +1,9 @@
+/ipch
+/Release
+/Debug
+/*.opensdf
+/*.sdf
+/*.suo
+/foo_catnap/Release
+/foo_catnap/Debug
+/foo_catnap/*.user
