@@ -83,7 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="README.md" />
+    <None Include="..\README.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\sdk\2011-03-11\foobar2000\foobar2000_component_client\foobar2000_component_client.vcxproj">

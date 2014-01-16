@@ -4,7 +4,7 @@
 #include "catnap_server.h"
 
 DECLARE_COMPONENT_VERSION(
-	"RESTful API",
+	"RESTful Web Service",
 	"1.0.0",
 	"TODO: Add description"
 )
