@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "foobar2000/SDK/foobar2000.h"
 
-#include "catnap_server.h"
+#include "CatNapServer.h"
 
 DECLARE_COMPONENT_VERSION(
 	"RESTful Web Service",

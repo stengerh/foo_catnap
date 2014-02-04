@@ -5,41 +5,85 @@
     <!--<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>-->
     <!--<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>-->
     <!--<script src="test.js"></script>-->
+    <style type="text/css">
+#playlists {
+
+}
+
+#playlists li {
+    background-color: #fff;
+    color: #000;
+}
+
+#playlists li:nth-child(2) {
+    background-color: #eee;
+}
+    </style>
 </head>
 
 <body>
 
 <ol>
     <li>Sending request... <span id="send-status"></span></li>
-    <li>Waiting for response... <span id="receive-status"><span><pre id="receive-message"></pre></li>
-    <li>Parsing response... <span id="parse-status"><span><pre id="parse-message"></pre></li>
+    <li>Waiting for response... <span id="receive-status"></span><pre id="receive-message"></pre></li>
+    <li>Parsing response... <span id="parse-status"></span><pre id="parse-message"></pre></li>
 </ol>
 
 <p>Playlists</p>
 <ol id="playlists">
 </ol>
 
+<p>Playback</p>
+<p id="playback-state">
+Connecting to server...
+</p>
+<p id="playback-info">
+</p>
+
+<p>Events</p>
+<ol id="events">
+</ol>
+
 <script type="text/javascript">
 (function() {
+    function $(id) {
+        return document.getElementById(id);
+    }
+    
+    function log(message) {
+        if (console && console.log) {
+            console.log(message);
+        }
+    }
+    
     var url = 'http://localhost:20402/playlists';
     var httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = function() {
-        if (httpRequest.readyState == 4 && httpRequest.status == 200)
-        {
-            document.getElementById('receive-status').innerHTML = 'done';
-            document.getElementById('receive-message').textContent = httpRequest.responseText;
-            
-            var data = JSON.parse(httpRequest.responseText);
-            document.getElementById('parse-status').innerHTML = 'done';
-            document.getElementById('parse-message').textContent = JSON.stringify(data);
-            
-            var playlists = data.playlists;
-            var parent = document.getElementById('playlists');
-            for (n = 0; n < playlists.length; ++n) {
-                var child = document.createElement('li');
-                var playlist = playlists[n];
-                child.textContent = playlist.name + (playlist.active ? ' [active]' : '') + (playlist.playing ? ' [playing]' : '');
-                parent.appendChild(child);
+        if (httpRequest.readyState >= 2) {
+            log('readyState=' + httpRequest.readyState + ", status=" + httpRequest.status);
+        } else {
+            log('readyState=' + httpRequest.readyState);
+        }
+        if (httpRequest.readyState == 4) {
+            if (httpRequest.status == 0) {
+                $('receive-status').textContent = 'failed';
+                $('parse-status').textContent = 'skipped';
+            } else if (httpRequest.status == 200) {
+                $('receive-status').textContent = 'passed';
+                $('receive-message').textContent = httpRequest.responseText;
+                
+                var data = JSON.parse(httpRequest.responseText);
+                $('parse-status').textContent = 'passed';
+                $('parse-message').textContent = JSON.stringify(data);
+                
+                var playlists = data.playlists;
+                var parent = document.getElementById('playlists');
+                for (n = 0; n < playlists.length; ++n) {
+                    var child = document.createElement('li');
+                    var playlist = playlists[n];
+                    child.textContent = playlist.name + (playlist.active ? ' [active]' : '') + (playlist.playing ? ' [playing]' : '');
+                    parent.appendChild(child);
+                }
             }
         }
     };
@@ -47,12 +91,100 @@
     httpRequest.setRequestHeader('ContentType', 'application/json; charset=utf-8');
     httpRequest.setRequestHeader('Accept', 'application/json; charset=utf-8');
     httpRequest.send();
-    document.getElementById('send-status').innerHTML = 'done';
+    $('send-status').textContent = 'passed';
+    
+    if (true && typeof(EventSource) !== 'undefined') {
+      var eventSource = new EventSource('http://localhost:20402/playlists/events');
+      var eventCount = 0;
+      eventSource.onopen = function(event) {
+        var item = document.createElement('li');
+        item.innerHTML = '[open]';
+        $('events').appendChild(item);
+        eventCount++;
+        if (eventCount > 10) {
+          eventSource.close();
+        }
+      }
+      eventSource.onmessage = function(event) {
+        var item = document.createElement('li');
+        item.innerHTML = '[message] ' + event.type + ':' + event.data;
+        $('events').appendChild(item);
+        eventCount++;
+        if (eventCount > 10) {
+          eventSource.close();
+        }
+      };
+      eventSource.addEventListener('test', function(event) {
+        var item = document.createElement('li');
+        item.innerHTML = '[test] type = ' + JSON.stringify(event.type) + ', data = ' + JSON.stringify(event.data) + ', lastEventId = ' + event.lastEventId;
+        $('events').appendChild(item);
+        eventCount++;
+        if (eventCount > 10) {
+          eventSource.close();
+        }
+      });
+      eventSource.onerror = function(event) {
+        var item = document.createElement('li');
+        var readyState = eventSource.readyState;
+        item.innerHTML = '[error] ' + ((readyState == 0) ? 'CONNECTING' : ((readyState == 1) ? 'OPEN' : ((readyState == 2) ? 'CLOSED' : readyState)));
+        $('events').appendChild(item);
+        eventCount++;
+        if (eventCount > 10) {
+          eventSource.close();
+        }
+      }
+    }
     //$('#responseParagraph').append("<p>Requesting data...</p>");
     //$.getJSON('http://localhost:20402/',
     //    function(data) {
     //        $('#responseParagraph').append("<p>"+data.responseMessage+"</p>");
     //    });
+})();
+(function() {
+    function $(id) {
+        return document.getElementById(id);
+    }
+    
+    function log(message) {
+        if (console && console.log) {
+            console.log(message);
+        }
+    }
+    
+    if (true && typeof(EventSource) !== 'undefined') {
+      var eventSource = new EventSource('http://localhost:20402/playback/events');
+      eventSource.onopen = function(event) {
+        log('onopen');
+        $('playback-state').textContent = 'Waiting for server...';
+      }
+      eventSource.onmessage = function(event) {
+        log('onmessage');
+        $('playback-state').textContent = ''+event.data;
+        $('playback-info').innerHTML = '';
+        var data = JSON.parse(event.data);
+        var span = document.createElement('span');
+        if (data.track != null) {
+          var artists = data.track.artist;
+          for (var index = 0; index < artists.length; ++index) {
+            var artist = artists[index];
+            if (index > 0) {
+              var fillerSpan = document.createElement('span');
+              fillerSpan.textContent = ', ';
+              span.appendChild(fillerSpan);
+            }
+            var artistSpan = document.createElement('a');
+            artistSpan.href = "";
+            artistSpan.textContent = artist;
+            span.appendChild(artistSpan);
+          }
+        }
+        $('playback-info').appendChild(span);
+      }
+      eventSource.onerror = function(event) {
+        log('onerror');
+        $('playback-state').textContent = 'Connecting to server...';
+      }
+    }
 })();
 </script>
 </body>

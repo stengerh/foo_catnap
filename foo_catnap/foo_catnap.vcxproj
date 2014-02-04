@@ -97,17 +97,34 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractCORSRequestHandler.cpp" />
     <ClCompile Include="foo_catnap.cpp" />
-    <ClCompile Include="catnap_server.cpp" />
+    <ClCompile Include="CatNapServer.cpp" />
+    <ClCompile Include="MainThreadDispatcher.cpp" />
+    <ClCompile Include="PlaybackEventsRequestHandler.cpp" />
+    <ClCompile Include="PlaybackFacade.cpp" />
+    <ClCompile Include="PlaylistFacade.cpp" />
+    <ClCompile Include="PlaylistsEventsRequestHandler.cpp" />
+    <ClCompile Include="PlaylistsRequestHandler.cpp" />
+    <ClCompile Include="CatNapRequestHandlerFactory.cpp" />
+    <ClCompile Include="RootRequestHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="foo_capnap.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="catnap_server.h" />
-    <ClInclude Include="componentversion_impl_dll.h" />
-    <ClInclude Include="componenversion_impl_dll.cpp" />
+    <ClInclude Include="AbstractCORSRequestHandler.h" />
+    <ClInclude Include="CatNapServer.h" />
+    <ClInclude Include="MainThreadDispatcher.h" />
+    <ClInclude Include="PlaybackEventsRequestHandler.h" />
+    <ClInclude Include="PlaybackFacade.h" />
+    <ClInclude Include="PlaylistFacade.h" />
+    <ClInclude Include="PlaylistInfo.h" />
+    <ClInclude Include="PlaylistsEventsRequestHandler.h" />
+    <ClInclude Include="PlaylistsRequestHandler.h" />
+    <ClInclude Include="CatNapRequestHandlerFactory.h" />
     <ClInclude Include="resources.h" />
+    <ClInclude Include="RootRequestHandler.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
