@@ -57,9 +57,6 @@
     <ClCompile Include="RootRequestHandler.cpp">
       <Filter>Requests\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CatNapServer.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CatNapRequestHandlerFactory.cpp">
       <Filter>Requests\Source Files</Filter>
     </ClCompile>
@@ -67,6 +64,9 @@
       <Filter>Requests\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PlaybackFacade.cpp">
+      <Filter>Bridge\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CatNapServer.cpp">
       <Filter>Bridge\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -103,9 +103,6 @@
     <ClInclude Include="PlaylistInfo.h">
       <Filter>Bridge\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CatNapServer.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CatNapRequestHandlerFactory.h">
       <Filter>Requests\Header Files</Filter>
     </ClInclude>
@@ -113,6 +110,9 @@
       <Filter>Requests\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlaybackFacade.h">
+      <Filter>Bridge\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CatNapServer.h">
       <Filter>Bridge\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
