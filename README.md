@@ -2,13 +2,14 @@
 
 Default port: 20402 = 0x4FB2
 
-GET /playlists
-GET /playlists/active
-GET /playlists/playing
-GET /playlists/:playlist
-GET /playlists/active/items
-GET /playlists/playing/items
-GET /playlists/:playlist/items
+Implemented endpoints:
+
+* / [GET, server availability check]
+* /playback/events [GET, HTML5 Server-Sent Events, playback state changes]
+* /playlists [GET]
+* /playlists/events [GET, HTML5 Server-Sent Events, hard-coded dummy data]
+ 
+See test.html for basic functionality tests.
 
 ## Links
 * [foobar2000 Home Page](http://www.foobar2000.org)
