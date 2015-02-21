@@ -5,7 +5,7 @@
 
 DECLARE_COMPONENT_VERSION(
 	"RESTful Web Service",
-	"1.0.0",
+	"1.0.1",
 	"TODO: Add description"
 )
 
