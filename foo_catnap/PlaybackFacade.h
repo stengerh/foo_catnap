@@ -1,11 +1,14 @@
 #ifndef CatNap_PlaybackFacade_INCLUDED
 #define CatNap_PlaybackFacade_INCLUDED
 
+#include <map>
+#include <list>
+#include <string>
+
 #include "Poco/ActiveMethod.h"
 #include "Poco/AbstractObserver.h"
 #include "Poco/Notification.h"
 #include "Poco/NotificationCenter.h"
-#include "Poco/ListMap.h"
 #include "MainThreadDispatcher.h"
 
 namespace CatNap {
@@ -15,7 +18,7 @@ namespace CatNap {
 	public:
 		typedef Poco::AutoPtr<PlaybackNotification> Ptr;
 
-		PlaybackNotification(bool started, bool paused, bool mapValid, const Poco::ListMap<std::string, std::string> &map):
+		PlaybackNotification(bool started, bool paused, bool mapValid, const std::map<std::string, std::list<std::string> > &map):
 			_started(started),
 			_paused(paused),
 			_mapValid(mapValid),
@@ -38,7 +41,7 @@ namespace CatNap {
 			return _mapValid;
 		}
 
-		inline const Poco::ListMap<std::string, std::string> map() const
+		inline const std::map<std::string, std::list<std::string> >& map() const
 		{
 			return _map;
 		}
@@ -47,7 +50,7 @@ namespace CatNap {
 		bool _started;
 		bool _paused;
 		bool _mapValid;
-		Poco::ListMap<std::string, std::string> _map;
+		std::map<std::string, std::list<std::string> > _map;
 	};
 
 	class PlaybackFacade : public MainThreadDispatcher

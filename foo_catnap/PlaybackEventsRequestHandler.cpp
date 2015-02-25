@@ -122,6 +122,7 @@ namespace CatNap {
 				std::ostream& out = response().send();
 				if (request().getMethod() == HTTPRequest::HTTP_GET)
 				{
+					// static_cast<HTTPServerRequestImpl&>(request).detachSocket()
 					Poco::SharedPtr<Poco::NotificationQueue> pQueue = new Poco::NotificationQueue();
 
 					PostingObserver<Poco::Notification> observer = PostingObserver<Poco::Notification>(pQueue);
@@ -175,28 +176,29 @@ namespace CatNap {
 		out << ",\"track\":";
 		if (nf.isMapValid()) {
 			out << "{";
-			std::string name;
-			const Poco::ListMap<std::string, std::string> &map = nf.map();
+			const std::map<std::string, std::list<std::string> > &map = nf.map();
 			for (auto it = map.begin(); it != map.end(); ++it)
 			{
-				if (it->first != name)
-				{
-					if (!name.empty())
-					{
-						out << "],";
-					}
-					name = it->first;
-					Poco::JSON::Stringifier::formatString(name, out);
-					out << ":[";
-				}
-				else
-				{
+				if (it != map.begin()) {
 					out << ",";
 				}
-				Poco::JSON::Stringifier::formatString(it->second, out);
-			}
-			if (!name.empty())
-			{
+
+				const std::string & name = it->first;
+				const std::list<std::string> & values = it->second;
+
+				Poco::JSON::Stringifier::formatString(name, out);
+				out << ":[";
+
+				for (auto valueIt = values.begin(); valueIt != values.end(); ++valueIt)
+				{
+					if (valueIt != values.begin())
+					{
+						out << ",";
+					}
+
+					Poco::JSON::Stringifier::formatString(*valueIt, out);
+				}
+
 				out << "]";
 			}
 			out << "}";

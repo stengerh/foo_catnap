@@ -81,15 +81,17 @@ namespace CatNap {
 	private:
 		void copy(const file_info &info, const char*name)
 		{
+			std::list<std::string> values;
 			const t_size name_index = info.meta_find(name);
 			if (name_index != pfc::infinite_size) {
 				const t_size value_count = info.meta_enum_value_count(name_index);
 				for (t_size value_index = 0; value_index < value_count; value_index++)
 				{
 					const char *value = info.meta_enum_value(name_index, value_index);
-					_map.insert(std::make_pair(name, value));
+					values.push_back(value);
 				}
 			}
+			_map.insert(std::make_pair(name, values));
 		}
 	public:
 
@@ -159,7 +161,7 @@ namespace CatNap {
 		bool _started;
 		bool _paused;
 		bool _mapValid;
-		Poco::ListMap<std::string, std::string> _map;
+		std::map<std::string, std::list<std::string> > _map;
 
 		NotificationCenter &_center;
 		PlaybackNotification::Ptr &_pLastNf;
